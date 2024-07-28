@@ -12,11 +12,15 @@ function HasAllBadges(member) {
     return Gymbadges_roles.every(role => member.roles.cache.has(role));
 }
 
+function HasAnyBadge(member) {
+    return Gymbadges_roles.some(role => member.roles.cache.has(role));
+}
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('removebadge')
-        .setDescription('removes badge from a user')
-        .addUserOption(option => option.setName('target').setDescription('The user to take badge from').setRequired(true)),
+        .setDescription('Remove the badge from a user')
+        .addUserOption(option => option.setName('target').setDescription('The user to remove the badge from').setRequired(true)),
     
     async execute(interaction) {
         const target = interaction.options.getUser('target');
@@ -32,21 +36,24 @@ module.exports = {
         });
 
         if (!hasGymLeaderRole) {
-            await interaction.reply('You do not have the permission to give badges.');
+            await interaction.reply('You do not have the permission to remove badges.');
             return;
         }
 
         if (indexofgymrole !== -1) {
-            if (HasAllBadges(member)) {
-                await member.roles.add(Gymbadges_roles[indexofgymrole]);
-                await member.roles.add(Elite_challenger);
-                await interaction.reply(`The user now has all the badges and is qualified to challenge the Elite 4.`);
+            if (member.roles.cache.has(Gymbadges_roles[indexofgymrole])) {
+                await member.roles.remove(Gymbadges_roles[indexofgymrole]);
+                if (!HasAllBadges(member) && member.roles.cache.has(Elite_challenger)) {
+                    await member.roles.remove(Elite_challenger);
+                    await interaction.reply('The badge has been removed, and the user is no longer an Elite Challenger.');
+                } else {
+                    await interaction.reply('The badge has been removed.');
+                }
             } else {
-                await member.roles.add(Gymbadges_roles[indexofgymrole]);
-                await interaction.reply('The user has been given the badge.');
+                await interaction.reply('The user does not have this badge.');
             }
         } else {
-            await interaction.reply('An error occurred while assigning the badge.');
+            await interaction.reply('An error occurred while removing the badge.');
         }
     },
 };
