@@ -14,9 +14,9 @@ function HasAllBadges(member) {
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('givebadge')
-        .setDescription('Give the badge to a user')
-        .addUserOption(option => option.setName('target').setDescription('The user to give the badge to').setRequired(true)),
+        .setName('removebadge')
+        .setDescription('removes badge from a user')
+        .addUserOption(option => option.setName('target').setDescription('The user to take badge from').setRequired(true)),
     
     async execute(interaction) {
         const target = interaction.options.getUser('target');
