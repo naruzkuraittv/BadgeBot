@@ -46,33 +46,37 @@ module.exports = {
         const member = await interaction.guild.members.fetch(target.id);
         
         let indexofgymrole = -1;
-        let hasGymLeaderRole = Gymleader_roles.some((role, index) => {
-            if (interaction.member.roles.cache.has(role)) {
-                indexofgymrole = index;
-                return true;
+        const command_enabled = true;
+        if (command_enabled == true) {  
+            let hasGymLeaderRole = Gymleader_roles.some((role, index) => {
+                if (interaction.member.roles.cache.has(role)) {
+                    indexofgymrole = index;
+                    return true;
+                }
+                return false;
+            });
+
+            if (!hasGymLeaderRole) {
+                await interaction.reply('You do not have the permission to remove badges.');
+                return;
             }
-            return false;
-        });
 
-        if (!hasGymLeaderRole) {
-            await interaction.reply('You do not have the permission to remove badges.');
-            return;
-        }
-
-        if (indexofgymrole !== -1) {
-            if (member.roles.cache.has(Gymbadges_roles[indexofgymrole])) {
-                await member.roles.remove(Gymbadges_roles[indexofgymrole]);
-                if (!HasAllBadges(member) && member.roles.cache.has(Elite_challenger)) {
-                    await member.roles.remove(Elite_challenger);
-                    await interaction.reply('The badge has been removed, and the user is no longer an Elite Challenger.');
+            if (indexofgymrole !== -1) {
+                if (member.roles.cache.has(Gymbadges_roles[indexofgymrole])) {
+                    await member.roles.remove(Gymbadges_roles[indexofgymrole]);
+                    if (!HasAllBadges(member) && member.roles.cache.has(Elite_challenger)) {
+                        await member.roles.remove(Elite_challenger);
+                        await interaction.reply('The badge has been removed, and the user is no longer an Elite Challenger.');
+                    } else {
+                        await interaction.reply('The badge has been removed.');
+                    }
                 } else {
-                    await interaction.reply('The badge has been removed.');
+                    await interaction.reply('The user does not have this badge.');
                 }
             } else {
-                await interaction.reply('The user does not have this badge.');
+                await interaction.reply('An error occurred while removing the badge.');
             }
-        } else {
-            await interaction.reply('An error occurred while removing the badge.');
         }
+        else {await interaction.reply('This command is disabled');}
     },
 };
