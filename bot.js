@@ -63,6 +63,8 @@ client.on(Events.InteractionCreate, async interaction => {
     }
 });
 
+const processingMembers = new Set();
+
 
 
 // Gym types as a visual indicator of the gym leader type and the gym badge type in its respective index
@@ -103,27 +105,22 @@ const E_Wins = ["1270937713851240549","1270937800442777622","1270938132078002207
  // if not has Ewins[0 through 3] and has Elite_challenger then add Ewins[0]
  // if has elite victor then add champion challenger
 
- function HasAllBadges(member) {    return Gymbadges_roles.every(role => member.roles.cache.has(role));}
+ function HasAllBadges(member) {
+    return Gymbadges_roles.every(role => member.roles.cache.has(role));
+}
 
-
- function handleE4_wins(member, role) {
+function handleE4_wins(member, role) {
     const roleIndex = E_Wins.indexOf(role.id);
-
-    // Remove all other E_Wins roles except the current one
     for (let i = 0; i < E_Wins.length; i++) {
         if (i !== roleIndex) {
             member.roles.remove(E_Wins[i]);
         }
     }
-
-    // Add the Champion_Challenger role if the member gains the Elite_Victor role (E_Wins[4])
     if (role.id === Elite_Victor) {
         member.roles.add(Champion_Challenger);
         member.roles.remove(Elite_challenger);
     } else {
-        // Ensure Champion_Challenger role is removed if the member does not have Elite_Victor
         member.roles.remove(Champion_Challenger);
-        // If the member has all gym badges, ensure Elite_challenger role and E_Wins[0]
         if (HasAllBadges(member)) {
             member.roles.add(Elite_challenger);
             member.roles.add(E_Wins[0]);
@@ -133,103 +130,93 @@ const E_Wins = ["1270937713851240549","1270937800442777622","1270938132078002207
 
 
 function handleRoles(member, role) {
-    // Check if the role is part of the Gymbadges_roles array
     if (Gymbadges_roles.includes(role.id)) {
-        // Check if the member has all badges
         if (HasAllBadges(member)) {
             member.roles.add(Elite_challenger);
         } else {
             member.roles.remove(Elite_challenger);
-            // Remove all E_Wins roles if member does not have all badges
+            member.roles.remove(Champion_Challenger);
             E_Wins.forEach(eliteRole => member.roles.remove(eliteRole));
-            return; // Exit if the user doesn't have all gym badges
+            return;
         }
     }
-
-    // If the member has the Elite_challenger role
     if (member.roles.cache.has(Elite_challenger)) {
         handleE4_wins(member, role);
     }
 }
 
 function handleRoles(member, role) {
-    // Check if the role is part of the Gymbadges_roles array
     if (Gymbadges_roles.includes(role.id)) {
-        // Check if the member has all badges
         if (HasAllBadges(member)) {
             member.roles.add(Elite_challenger);
         } else {
-            // Remove roles if the user does not have all badges
             member.roles.remove(Elite_challenger);
             member.roles.remove(Champion_Challenger);
             E_Wins.forEach(eliteRole => member.roles.remove(eliteRole));
-            return; // Exit if the user doesn't have all gym badges
+            return;
         }
     }
-
-    // If the member has the Elite_challenger role
     if (member.roles.cache.has(Elite_challenger)) {
         handleE4_wins(member, role);
     }
 }
 
+
+
 client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
-    // Detect role changes
-    const removedRoles = oldMember.roles.cache.filter(role => !newMember.roles.cache.has(role.id));
-    const addedRoles = newMember.roles.cache.filter(role => !oldMember.roles.cache.has(role.id));
+    if (processingMembers.has(newMember.id)) return;
+    processingMembers.add(newMember.id);
 
-    // Handle removed roles
-    if (removedRoles.size > 0) {
-        removedRoles.forEach(role => {
-            // Handle removal of Elite_challenger specifically
-            if (role.id === Elite_challenger) {
-                if (HasAllBadges(newMember)) {
-                    newMember.roles.add(Elite_challenger);
-                } else {
-                    newMember.roles.remove(Champion_Challenger);
-                    E_Wins.forEach(eliteRole => newMember.roles.remove(eliteRole));
-                }
-            }
+    try {
+        const removedRoles = oldMember.roles.cache.filter(role => !newMember.roles.cache.has(role.id));
+        const addedRoles = newMember.roles.cache.filter(role => !oldMember.roles.cache.has(role.id));
 
-            // Handle removal of Elite_Victor specifically
-            if (role.id === Elite_Victor) {
-                if (HasAllBadges(newMember)) {
-                    newMember.roles.add(Elite_challenger);
-                    // Reset to Elite Wins 0
-                    newMember.roles.add(E_Wins[0]);
-                    for (let i = 1; i < E_Wins.length; i++) {
-                        newMember.roles.remove(E_Wins[i]);
+        if (removedRoles.size > 0) {
+            removedRoles.forEach(role => {
+                if (role.id === Elite_challenger) {
+                    if (HasAllBadges(newMember)) {
+                        newMember.roles.add(Elite_challenger);
+                    } else {
+                        newMember.roles.remove(Champion_Challenger);
+                        E_Wins.forEach(eliteRole => newMember.roles.remove(eliteRole));
                     }
-                } else {
-                    newMember.roles.remove(Champion_Challenger);
-                    E_Wins.forEach(eliteRole => newMember.roles.remove(eliteRole));
                 }
-            }
-
-            // Handle gym badge role removal
-            if (Gymbadges_roles.includes(role.id)) {
-                if (!HasAllBadges(newMember)) {
-                    newMember.roles.remove(Elite_challenger);
-                    newMember.roles.remove(Champion_Challenger);
-                    E_Wins.forEach(eliteRole => newMember.roles.remove(eliteRole));
+                if (role.id === Elite_Victor) {
+                    if (HasAllBadges(newMember)) {
+                        newMember.roles.add(Elite_challenger);
+                        newMember.roles.add(E_Wins[0]);
+                        for (let i = 1; i < E_Wins.length; i++) {
+                            newMember.roles.remove(E_Wins[i]);
+                        }
+                    } else {
+                        newMember.roles.remove(Champion_Challenger);
+                        E_Wins.forEach(eliteRole => newMember.roles.remove(eliteRole));
+                    }
                 }
-            }
-            handleRoles(newMember, role);
-        });
-    }
-
-    // Handle added roles
-    if (addedRoles.size > 0) {
-        addedRoles.forEach(role => handleRoles(newMember, role));
-    }
-
-    // Combined check for simultaneous addition of last badge and Elite_challenger
-    if (HasAllBadges(newMember) && !oldMember.roles.cache.has(Elite_challenger) && newMember.roles.cache.has(Elite_challenger)) {
-        newMember.roles.add(Elite_challenger);
-        newMember.roles.add(E_Wins[0]);
-        for (let i = 1; i < E_Wins.length; i++) {
-            newMember.roles.remove(E_Wins[i]);
+                if (Gymbadges_roles.includes(role.id)) {
+                    if (!HasAllBadges(newMember)) {
+                        newMember.roles.remove(Elite_challenger);
+                        newMember.roles.remove(Champion_Challenger);
+                        E_Wins.forEach(eliteRole => newMember.roles.remove(eliteRole));
+                    }
+                }
+                handleRoles(newMember, role);
+            });
         }
+
+        if (addedRoles.size > 0) {
+            addedRoles.forEach(role => handleRoles(newMember, role));
+        }
+
+        if (HasAllBadges(newMember) && !oldMember.roles.cache.has(Elite_challenger) && newMember.roles.cache.has(Elite_challenger)) {
+            newMember.roles.add(Elite_challenger);
+            newMember.roles.add(E_Wins[0]);
+            for (let i = 1; i < E_Wins.length; i++) {
+                newMember.roles.remove(E_Wins[i]);
+            }
+        }
+    } finally {
+        processingMembers.delete(newMember.id);
     }
 });
 
