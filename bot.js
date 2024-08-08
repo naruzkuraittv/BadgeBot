@@ -90,103 +90,240 @@ const Gymbadges_roles = [normal[1],fire[1],water[1],grass[1],electric[1],ice[1],
 const Elite_challenger = "1258198493537898537";
 const Elite_Victor = "1265341660028731555";
 const Champion_Challenger = "1258198593634963577";
+const Champions = "1247247172127297616";
 system = ["Ewins:0", "Ewins:1", "Ewins:2", "Ewins:3"];
 const E_Wins = ["1270937713851240549","1270937800442777622","1270938132078002207","1270937897108766771", Elite_Victor];
 
 function HasAllBadges(member) {
     return Gymbadges_roles.every(role => member.roles.cache.has(role));
 }
-
-function handleE4_wins(member, role) {
-    const roleIndex = E_Wins.indexOf(role.id);
-    for (let i = 0; i < E_Wins.length; i++) {
-        if (i !== roleIndex) {
-            member.roles.remove(E_Wins[i]);
-        }
-    }
-    if (role.id === Elite_Victor) {
-        member.roles.add(Champion_Challenger);
+function whatrolesdotheyhave(member, roles) {
+    return roles.some(role => member.roles.cache.has(role));
+}
+function handlerolesold(member, role, gainorloose)
+    {
+    //does the member have all the badges
+    // if not has Elite_challenger role, then remove future roles
+    if (!HasAllBadges(member)) {
         member.roles.remove(Elite_challenger);
-    } else {
+        member.roles.remove(E_Wins[0]);
+        member.roles.remove(E_Wins[1]);
+        member.roles.remove(E_Wins[2]);
+        member.roles.remove(E_Wins[3]);
+        member.roles.remove(Elite_Victor);
         member.roles.remove(Champion_Challenger);
-        if (HasAllBadges(member)) {
+
+    }
+    //if has all the badges
+    if (HasAllBadges(member)) 
+        {
+        let rolesToCheck = [Elite_challenger, E_Wins[0], E_Wins[1], E_Wins[2], E_Wins[3], Elite_Victor, Champion_Challenger, Champions];
+
+        //check if they have the Elite_challenger role, any of the Ewins roles, or the Elite_Victor role
+        
+        //if has Elite_challenger role, then add Ewins[0]
+        whatrolesdotheyhave(member, rolesToCheck);
+        if (!member.roles.cache.has(Elite_challenger || Elite_Victor || Champion_Challenger || Champions)) 
+            {
+                member.roles.add(Elite_challenger);
+                if (!member.roles.cache.has(E_Wins[0]||E_Wins[1]||E_Wins[2]||E_Wins[3]||Elite_Victor)) 
+                    {
+                        member.roles.add(E_Wins[0]);
+                    }
+            }
+            whatrolesdotheyhave(member, rolesToCheck);
+            if (member.roles.cache.has(Elite_challenger)) 
+                { // they should have it it was just given or they already had it
+                // if has elite victor, then add champion challenger remove ewins
+                    if (member.roles.cache.has(Elite_Victor)) // they might
+                        {
+                            member.roles.remove(E_Wins[3]);
+                            member.roles.remove(E_Wins[2]);
+                            member.roles.remove(E_Wins[1]);
+                            member.roles.remove(E_Wins[0]);
+
+                            member.roles.add(Champion_Challenger);
+
+                        }
+                    if (!member.roles.cache.has(Elite_Victor)) // should remove all roles above Elite_victor if they have them
+                            {
+                            whatrolesdotheyhave(member, rolesToCheck);
+
+                            if (memberr.roles.cache.has(E_Wins[0]||E_Wins[1]||E_Wins[2]||E_Wins[3])) 
+                                {
+                                    if (member.roles.cache.has(E_Wins[3])) 
+                                        {
+                                            member.roles.remove(Champion_Challenger);
+                                            member.roles.remove(E_Wins[2]);
+                                            member.roles.remove(E_Wins[2]);
+                                            member.roles.remove(E_Wins[1]);
+                                            member.roles.remove(E_Wins[0]);
+                                        }
+                                    whatrolesdotheyhave(member, rolesToCheck);
+                                    if (member.roles.cache.has(E_Wins[2])) 
+                                        {
+                                            member.roles.remove(E_Wins[3]);
+                                            member.roles.remove(E_Wins[1]);
+                                            member.roles.remove(E_Wins[0]);
+                                        }
+                                    whatrolesdotheyhave(member, rolesToCheck);
+                                    if (member.roles.cache.has(E_Wins[1])) 
+                                        {
+                                            member.roles.remove(E_Wins[3]);
+                                            member.roles.remove(E_Wins[2]);
+                                            member.roles.remove(E_Wins[0]);
+                                        }
+                                    whatrolesdotheyhave(member, rolesToCheck);
+                                    if (member.roles.cache.has(E_Wins[0])) 
+                                        {
+                                            member.roles.remove(E_Wins[3]);
+                                            member.roles.remove(E_Wins[2]);
+                                            member.roles.remove(E_Wins[1]);
+                                        }
+                                    console.log("has elite challenger and and Ewins but not Elite Victor, all things are as they should be");
+                                }
+
+                        }
+                }
+            
+            
+                if (member.roles.cache.has(Elite_Victor)) // they might
+                {
+                    member.roles.remove(E_Wins[3]);
+                    member.roles.remove(E_Wins[2]);
+                    member.roles.remove(E_Wins[1]);
+                    member.roles.remove(E_Wins[0]);
+
+                    member.roles.add(Champion_Challenger);
+
+                }
+            if (!member.roles.cache.has(Elite_Victor)) // should remove all roles above Elite_victor if they have them
+                    {
+                    whatrolesdotheyhave(member, rolesToCheck);
+
+                    if (memberr.roles.cache.has(E_Wins[0]||E_Wins[1]||E_Wins[2]||E_Wins[3])) 
+                        {
+                            if (member.roles.cache.has(E_Wins[3])) 
+                                {
+                                    member.roles.remove(Champion_Challenger);
+                                    member.roles.remove(E_Wins[2]);
+                                    member.roles.remove(E_Wins[2]);
+                                    member.roles.remove(E_Wins[1]);
+                                    member.roles.remove(E_Wins[0]);
+                                }
+                            whatrolesdotheyhave(member, rolesToCheck);
+                            if (member.roles.cache.has(E_Wins[2])) 
+                                {
+                                    member.roles.remove(E_Wins[3]);
+                                    member.roles.remove(E_Wins[1]);
+                                    member.roles.remove(E_Wins[0]);
+                                }
+                            whatrolesdotheyhave(member, rolesToCheck);
+                            if (member.roles.cache.has(E_Wins[1])) 
+                                {
+                                    member.roles.remove(E_Wins[3]);
+                                    member.roles.remove(E_Wins[2]);
+                                    member.roles.remove(E_Wins[0]);
+                                }
+                            whatrolesdotheyhave(member, rolesToCheck);
+                            if (member.roles.cache.has(E_Wins[0])) 
+                                {
+                                    member.roles.remove(E_Wins[3]);
+                                    member.roles.remove(E_Wins[2]);
+                                    member.roles.remove(E_Wins[1]);
+                                }
+                            console.log("has elite challenger and and Ewins but not Elite Victor, all things are as they should be");
+                        }
+
+                }
+        }
+        if (!HasAllBadges(member)) 
+            {
+                member.roles.remove(Elite_challenger);
+                member.roles.remove(E_Wins[0]);
+                member.roles.remove(E_Wins[1]);
+                member.roles.remove(E_Wins[2]);
+                member.roles.remove(E_Wins[3]);
+                member.roles.remove(Elite_Victor);
+                member.roles.remove(Champion_Challenger);
+                member.roles.remove(Champions);
+    
+            }
+    }
+
+function handleRoles2(member) {
+    const hasAll = hasAllBadges(member);
+    const rolesToCheck = [Elite_challenger, ...E_Wins, Champion_Challenger, Champions];
+
+    if (hasAll) {
+        if (!member.roles.cache.has(Elite_challenger) && !rolesToCheck.some(role => member.roles.cache.has(role))) {
             member.roles.add(Elite_challenger);
             member.roles.add(E_Wins[0]);
+        } else if (member.roles.cache.has(Elite_Victor)) {
+            member.roles.remove(E_Wins);
+            member.roles.add(Champion_Challenger);
+        }
+    } else {
+        member.roles.remove([Elite_challenger, ...E_Wins, Elite_Victor, Champion_Challenger, Champions]);
+    }
+}
+
+function handleRoles(member) {
+    const Elite_challenger = "1258198493537898537";
+    const Elite_Victor = "1265341660028731555";
+    const Champion_Challenger = "1258198593634963577";
+    const Champions = "1247247172127297616";
+    const E_Wins = ["1270937713851240549", "1270937800442777622", "1270938132078002207", "1270937897108766771", Elite_Victor];
+
+    function HasAllBadges(member) {
+        return Gymbadges_roles.every(role => member.roles.cache.has(role));
+    }
+
+    if (!HasAllBadges(member)) {
+        member.roles.remove([Elite_challenger, ...E_Wins, Elite_Victor, Champion_Challenger, Champions]);
+        return;
+    }
+
+    if (HasAllBadges(member)) {
+        if (!member.roles.cache.has(Elite_challenger)) {
+            member.roles.add(Elite_challenger);
+        }
+
+        let ewinIndex = E_Wins.findIndex(role => member.roles.cache.has(role));
+        
+        if (ewinIndex === -1) {
+            member.roles.add(E_Wins[0]);
+        } else if (ewinIndex < E_Wins.length - 1) {
+            member.roles.remove(E_Wins.slice(0, ewinIndex + 1));
+            member.roles.add(E_Wins[ewinIndex + 1]);
+        }
+
+        if (member.roles.cache.has(Elite_Victor)) {
+            member.roles.remove(E_Wins.slice(0, E_Wins.length - 1));
+            member.roles.add(Champion_Challenger);
+        }
+
+        if (member.roles.cache.has(Champion_Challenger)) {
+            member.roles.remove([Elite_challenger, ...E_Wins.slice(0, E_Wins.length - 1), Elite_Victor]);
         }
     }
 }
 
-function handleRoles(member, role) {
-    if (Gymbadges_roles.includes(role.id)) {
-        if (HasAllBadges(member)) {
-            member.roles.add(Elite_challenger);
-        } else {
-            member.roles.remove(Elite_challenger);
-            member.roles.remove(Champion_Challenger);
-            E_Wins.forEach(eliteRole => member.roles.remove(eliteRole));
-            return;
-        }
-    }
-    if (member.roles.cache.has(Elite_challenger)) {
-        handleE4_wins(member, role);
-    }
-}
+
+
+
+
 
 client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
     if (processingMembers.has(newMember.id)) return;
     processingMembers.add(newMember.id);
 
-    try {
-        const removedRoles = oldMember.roles.cache.filter(role => !newMember.roles.cache.has(role.id));
-        const addedRoles = newMember.roles.cache.filter(role => !oldMember.roles.cache.has(role.id));
-
-        if (removedRoles.size > 0) {
-            removedRoles.forEach(role => {
-                if (role.id === Elite_challenger) {
-                    if (HasAllBadges(newMember)) {
-                        newMember.roles.add(Elite_challenger);
-                    } else {
-                        newMember.roles.remove(Champion_Challenger);
-                        E_Wins.forEach(eliteRole => newMember.roles.remove(eliteRole));
-                    }
-                }
-                if (role.id === Elite_Victor) {
-                    if (HasAllBadges(newMember)) {
-                        newMember.roles.add(Elite_challenger);
-                        newMember.roles.add(E_Wins[0]);
-                        for (let i = 1; i < E_Wins.length; i++) {
-                            newMember.roles.remove(E_Wins[i]);
-                        }
-                    } else {
-                        newMember.roles.remove(Champion_Challenger);
-                        E_Wins.forEach(eliteRole => newMember.roles.remove(eliteRole));
-                    }
-                }
-                if (Gymbadges_roles.includes(role.id)) {
-                    if (!HasAllBadges(newMember)) {
-                        newMember.roles.remove(Elite_challenger);
-                        newMember.roles.remove(Champion_Challenger);
-                        E_Wins.forEach(eliteRole => newMember.roles.remove(eliteRole));
-                    }
-                }
-                handleRoles(newMember, role);
-            });
-        }
-
-        if (addedRoles.size > 0) {
-            addedRoles.forEach(role => handleRoles(newMember, role));
-        }
-
-        if (HasAllBadges(newMember) && !oldMember.roles.cache.has(Elite_challenger) && newMember.roles.cache.has(Elite_challenger)) {
-            newMember.roles.add(Elite_challenger);
-            newMember.roles.add(E_Wins[0]);
-            for (let i = 1; i < E_Wins.length; i++) {
-                newMember.roles.remove(E_Wins[i]);
-            }
-        }
-    } finally {
-        processingMembers.delete(newMember.id);
+    const gainedRole = newMember.roles.cache.find(role => !oldMember.roles.cache.has(role.id));
+    if (gainedRole) {
+        handleRoles(newMember);
     }
+
+    processingMembers.delete(newMember.id);
 });
 
 client.login(token);
