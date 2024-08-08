@@ -24,6 +24,7 @@ function loadCommands(dir) {
         }
     }
 }
+
 async function clearAndRegisterCommands() {
     const guilds = await client.guilds.fetch();
     const rest = new REST({ version: '9' }).setToken(token);
@@ -101,9 +102,36 @@ const E_Wins = ["1270937713851240549","1270937800442777622","1270938132078002207
  // if has E_wins[i-1] and gets e_wins[i] then remove e_wins[i-1]
  // if not has Ewins[0 through 3] and has Elite_challenger then add Ewins[0]
  // if has elite victor then add champion challenger
- function HasAllBadges(member) {
-    return Gymbadges_roles.every(role => member.roles.cache.has(role));
+
+ function HasAllBadges(member) {    return Gymbadges_roles.every(role => member.roles.cache.has(role));}
+
+
+ function handleE4_wins(member, role) {
+    const roleIndex = E_Wins.indexOf(role.id);
+
+    // Remove all other E_Wins roles except the current one
+    for (let i = 0; i < E_Wins.length; i++) {
+        if (i !== roleIndex) {
+            member.roles.remove(E_Wins[i]);
+        }
+    }
+
+    // Add the Champion_Challenger role if the member gains the Elite_Victor role (E_Wins[4])
+    if (role.id === Elite_Victor) {
+        member.roles.add(Champion_Challenger);
+        member.roles.remove(Elite_challenger);
+    } else {
+        // Ensure Champion_Challenger role is removed if the member does not have Elite_Victor
+        member.roles.remove(Champion_Challenger);
+        // If the member has all gym badges, ensure Elite_challenger role and E_Wins[0]
+        if (HasAllBadges(member)) {
+            member.roles.add(Elite_challenger);
+            member.roles.add(E_Wins[0]);
+        }
+    }
 }
+
+
 function handleRoles(member, role) {
     // Check if the role is part of the Gymbadges_roles array
     if (Gymbadges_roles.includes(role.id)) {
@@ -123,8 +151,6 @@ function handleRoles(member, role) {
         handleE4_wins(member, role);
     }
 }
-
-
 
 function handleRoles(member, role) {
     // Check if the role is part of the Gymbadges_roles array
@@ -146,8 +172,6 @@ function handleRoles(member, role) {
         handleE4_wins(member, role);
     }
 }
-
-
 
 client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
     // Detect role changes
