@@ -90,7 +90,7 @@ const Gymbadges_roles = [normal[1],fire[1],water[1],grass[1],electric[1],ice[1],
 const Elite_challenger = "1258198493537898537";
 const Elite_Victor = "1265341660028731555";
 const Champion_Challenger = "1258198593634963577";
-const system = ["Ewins:0", "Ewins:1", "Ewins:2", "Ewins:3"];
+system = ["Ewins:0", "Ewins:1", "Ewins:2", "Ewins:3"];
 const E_Wins = ["1270937713851240549","1270937800442777622","1270938132078002207","1270937897108766771", Elite_Victor];
 
 function HasAllBadges(member) {
