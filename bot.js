@@ -287,13 +287,15 @@ function handleRoles(member) {
     if (HasAllBadges(member)) {
         if (!member.roles.cache.has(Elite_challenger)) {
             member.roles.add(Elite_challenger);
+            member.roles.add(E_Wins[0]);
+            return;
         }
 
         let ewinIndex = E_Wins.findIndex(role => member.roles.cache.has(role));
-        
+
         if (ewinIndex === -1) {
             member.roles.add(E_Wins[0]);
-        } else if (ewinIndex < E_Wins.length - 1) {
+        } else if (ewinIndex < E_Wins.length - 2) {
             member.roles.remove(E_Wins.slice(0, ewinIndex + 1));
             member.roles.add(E_Wins[ewinIndex + 1]);
         }
