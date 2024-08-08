@@ -100,7 +100,13 @@ function HasAllBadges(member) {
 function whatrolesdotheyhave(member, roles) {
     return roles.some(role => member.roles.cache.has(role));
 }
-function handleRoles(member, role, gainorloose)
+
+function handleRoles(member) {
+    console.log("user id: " + member.id);
+}
+
+
+function handleRoles1(member, role, gainorloose)
     {
     //does the member have all the badges
     // if not has Elite_challenger role, then remove future roles
