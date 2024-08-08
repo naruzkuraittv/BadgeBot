@@ -251,7 +251,7 @@ function handlerolesold(member, role, gainorloose)
             }
     }
 
-function handleRoles2(member) {
+function handleRoles(member) {
     const hasAll = hasAllBadges(member);
     const rolesToCheck = [Elite_challenger, ...E_Wins, Champion_Challenger, Champions];
 
@@ -268,7 +268,7 @@ function handleRoles2(member) {
     }
 }
 
-function handleRoles(member) {
+function handleRoles3(member) { // 100 % broken
     const Elite_challenger = "1258198493537898537";
     const Elite_Victor = "1265341660028731555";
     const Champion_Challenger = "1258198593634963577";
