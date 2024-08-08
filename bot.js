@@ -100,7 +100,7 @@ function HasAllBadges(member) {
 function whatrolesdotheyhave(member, roles) {
     return roles.some(role => member.roles.cache.has(role));
 }
-function handlerolesold(member, role, gainorloose)
+function handleRoles(member, role, gainorloose)
     {
     //does the member have all the badges
     // if not has Elite_challenger role, then remove future roles
@@ -251,8 +251,8 @@ function handlerolesold(member, role, gainorloose)
             }
     }
 
-function handleRoles(member) {
-    const hasAll = hasAllBadges(member);
+function handleRoles2(member) {
+    const hasAll =  member.roles.cache.has(Elite_challenger) && E_Wins.every(role => member.roles.cache.has(role)) && member.roles.cache.has(Elite_Victor);
     const rolesToCheck = [Elite_challenger, ...E_Wins, Champion_Challenger, Champions];
 
     if (hasAll) {
