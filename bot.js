@@ -321,16 +321,6 @@ function doyouhaveallgymbadges(member) {
     return Gymbadges_roles.every(role => member.roles.cache.has(role));
 }
 function managebadges(member) {
-    if (!doyouhaveallgymbadges(member)) {
-        member.roles.remove(Elite_challenger);
-        member.roles.remove(E_Wins[0]);
-        member.roles.remove(E_Wins[1]);
-        member.roles.remove(E_Wins[2]);
-        member.roles.remove(E_Wins[3]);
-       /*member.roles.remove(Elite_Victor);
-        member.roles.remove(Champion_Challenger);
-        member.roles.remove(Champions);*/
-    }   
     if (doyouhaveallgymbadges(member)) {
         member.roles.add(Elite_challenger);
         if (
@@ -344,6 +334,17 @@ function managebadges(member) {
         }
         
     }
+    if (!doyouhaveallgymbadges(member)) {
+        member.roles.remove(Elite_challenger);
+        member.roles.remove(E_Wins[0]);
+        member.roles.remove(E_Wins[1]);
+        member.roles.remove(E_Wins[2]);
+        member.roles.remove(E_Wins[3]);
+       /*member.roles.remove(Elite_Victor);
+        member.roles.remove(Champion_Challenger);
+        member.roles.remove(Champions);*/
+    }   
+
 
 }
 
