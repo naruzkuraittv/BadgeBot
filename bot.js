@@ -365,13 +365,17 @@ client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
     if (processingMembers.has(newMember.id)) return;
     processingMembers.add(newMember.id);
 
-    const gainedRole = newMember.roles.cache.find(role => !oldMember.roles.cache.has(role.id));
-    if (gainedRole) {
-        //handleRoles(newMember);
+    // Check if a role was gained or lost
+    const roleChanged = newMember.roles.cache.some(role => !oldMember.roles.cache.has(role.id)) ||
+                        oldMember.roles.cache.some(role => !newMember.roles.cache.has(role.id));
+    
+    if (roleChanged) {
         managebadges(newMember);
     }
 
     processingMembers.delete(newMember.id);
 });
+
+
 
 client.login(token);
