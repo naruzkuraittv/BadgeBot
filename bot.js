@@ -323,7 +323,7 @@ function doyouhaveallgymbadges(member) {
 }
 function managebadges(member) {
     let taken = false; 
-    let re4c = false, r0 = false, r1 = false, r2 = false, r3 = false; 
+    let re4 = false, r0 = false, r1 = false, r2 = false, r3 = false; 
     if (doyouhaveallgymbadges(member)) {
         console.log("has all the badges");
         if (
@@ -332,16 +332,15 @@ function managebadges(member) {
             !member.roles.cache.has(E_Wins[1]) &&
             !member.roles.cache.has(E_Wins[2]) &&
             !member.roles.cache.has(E_Wins[3]) &&
-            !member.roles.cache.has(Elite_Victor)&&
-            !member.roles.cache.has(Champion_Challenger)&&
+            !member.roles.cache.has(Elite_Victor) &&
+            !member.roles.cache.has(Champion_Challenger) &&
             !member.roles.cache.has(Champions)
         ) {
             member.roles.add(Elite_challenger);
             member.roles.add(E_Wins[0]);
-            console.log("does not have any Ewins and or isnt champion or elite challenger or a champuion \n adding Ewins[0] and Elite Challenger");
-        }
-        else {
-            console.log("has all the badges, and atleast one of the higher stuff");
+            console.log("does not have any Ewins and or isn't champion or elite challenger or a champion \n adding Ewins[0] and Elite Challenger");
+        } else {
+            console.log("has all the badges, and at least one of the higher roles");
             if (
                 member.roles.cache.has(Elite_challenger) &&
                 !member.roles.cache.has(E_Wins[0]) &&
@@ -352,15 +351,14 @@ function managebadges(member) {
                 !member.roles.cache.has(Champion_Challenger) &&
                 !member.roles.cache.has(Champions)
             ) {
-                console.log("does not have any Ewins but has elite challenger \n adding Ewins[0]");
+                console.log("does not have any Ewins or future victor/challenger roles but has elite challenger \n adding Ewins[0]");
                 member.roles.add(E_Wins[0]);
                 taken = false;
-            }
-            else {
-            console.log("has Ewins elite victor or champion challenger or champions");
+            } else {
+                console.log("has Ewins, elite victor, champion challenger, or champions");
                 if (member.roles.cache.has(Elite_challenger)) {
                     console.log("has Elite_challenger");
-                    console.log("this part of the else .... if statement does nothing and is here for logging only");
+                    console.log("this part of the else...if statement does nothing and is here for logging only");
                     if (member.roles.cache.has(E_Wins[0])) {
                         console.log("has E_Wins[0]");
                     }
@@ -373,92 +371,70 @@ function managebadges(member) {
                     if (member.roles.cache.has(E_Wins[3])) {
                         console.log("has E_Wins[3]");
                     }
-                    if (member.roles.cache.has(Elite_Victor)) {
-                        console.log("has Elite_Victor");
-                //if member has elite victor then remove all Ewins and elite challenger and add champion challenger
-                        console.log("has Elite_challenger");
+                    if (member.roles.cache.has(Elite_Victor) && !member.roles.cache.has(Champion_Challenger)) {
+                        console.log("has Elite_Victor, keeping role and removing Ewins and Elite Challenger, adding Champion Challenger");
                         member.roles.remove(Elite_challenger);
-                        console.log("removed Elite_challenger");
-                        //add champion challenger
+                        member.roles.remove(E_Wins[0]);
+                        member.roles.remove(E_Wins[1]);
+                        member.roles.remove(E_Wins[2]);
+                        member.roles.remove(E_Wins[3]);
                         member.roles.add(Champion_Challenger);
                     }
                 }
-
-
             }
-            console.log("has Ewins or elite challenger or champion challenger or champion");
-            //if has Elite_victor then add Champion_Challenger
-            if (member.roles.cache.has(Elite_Victor)&&
-                !member.roles.cache.has(Champion_Challenger)
-                ) 
-            {
-                console.log("Elite Victor removed, champion challenger added it");
-                member.roles.remove(Elite_challenger);
-                member.roles.remove(Elite_Victor);
-                member.roles.add(Champion_Challenger);
-            }
-            if (member.roles.cache.has(Champions) &&
-                !member.roles.cache.has(Champion_Challenger) 
-                )
-                console.log("has Champion Challenger and champions taking champion challenger");
-                member.roles.remove(Champion_Challenger);                
+
+            if (member.roles.cache.has(Champions) && member.roles.cache.has(Champion_Challenger)) {
+                console.log("User is both Champion and Champion Challenger, removing Champion Challenger.");
+                member.roles.remove(Champion_Challenger);
             }
         }
-
-    else {
+    } else {
         console.log("does not have all the badges");
-        if (member.roles.cache.has(Elite_challenger)) 
-            {
-                console.log("has Elite_challenger");
-                member.roles.remove(Elite_challenger);
-                console.log("removed Elite_challenger");
-                re4 = true;
-                taken = true;
-            }
-        if (member.roles.cache.has(E_Wins[0])) 
-            {
-                console.log("has E_Wins[0]");
-                member.roles.remove(E_Wins[0]);
-                console.log("removed E_Wins[0]");
-                r0 = true;
-                taken = true;
-            }
-        if (member.roles.cache.has(E_Wins[1])) 
-            {
-                console.log("has E_Wins[1]");
-                member.roles.remove(E_Wins[1]);
-                console.log("removed E_Wins[1]");
-                r1 = true;
-                taken = true;
-            }
-        if (member.roles.cache.has(E_Wins[2])) 
-            {
-                console.log("has E_Wins[2]");
-                member.roles.remove(E_Wins[2]);
-                console.log("removed E_Wins[2]");
-                r2 = true;
-                taken = true;
-            }
-        if (member.roles.cache.has(E_Wins[3])) 
-            {
-                console.log("has E_Wins[3]");
-                member.roles.remove(E_Wins[3]);
-                console.log("removed E_Wins[3]");
-                r3 = true;
-                taken = true;
-            }
-        if (taken == true) 
-            {
-                console.log("taken is true");
-                console.log(`The user lost re4: ${re4}, r0: ${r0}, r1: ${r1}, r2: ${r2}, r3: ${r3}`);
-            }
+        if (member.roles.cache.has(Elite_challenger)) {
+            console.log("has Elite_challenger");
+            member.roles.remove(Elite_challenger);
+            console.log("removed Elite_challenger");
+            re4 = true;
+            taken = true;
+        }
+        if (member.roles.cache.has(E_Wins[0])) {
+            console.log("has E_Wins[0]");
+            member.roles.remove(E_Wins[0]);
+            console.log("removed E_Wins[0]");
+            r0 = true;
+            taken = true;
+        }
+        if (member.roles.cache.has(E_Wins[1])) {
+            console.log("has E_Wins[1]");
+            member.roles.remove(E_Wins[1]);
+            console.log("removed E_Wins[1]");
+            r1 = true;
+            taken = true;
+        }
+        if (member.roles.cache.has(E_Wins[2])) {
+            console.log("has E_Wins[2]");
+            member.roles.remove(E_Wins[2]);
+            console.log("removed E_Wins[2]");
+            r2 = true;
+            taken = true;
+        }
+        if (member.roles.cache.has(E_Wins[3])) {
+            console.log("has E_Wins[3]");
+            member.roles.remove(E_Wins[3]);
+            console.log("removed E_Wins[3]");
+            r3 = true;
+            taken = true;
+        }
+        if (taken) {
+            console.log("taken is true");
+            console.log(`The user lost re4: ${re4}, r0: ${r0}, r1: ${r1}, r2: ${r2}, r3: ${r3}`);
+        }
     /*member.roles.remove(Elite_Victor);
         member.roles.remove(Champion_Challenger);
         member.roles.remove(Champions);*/
-    };
-
-
+    }
 }
+
 
 
 function IsItE_WinsOrBadges(member) {
