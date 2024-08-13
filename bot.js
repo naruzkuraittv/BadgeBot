@@ -334,8 +334,11 @@ function managebadges(member) {
             !member.roles.cache.has(E_Wins[3]) &&
             !member.roles.cache.has(Elite_Victor)
         ) {
-            console.log("does not have any Ewins");
+            console.log("does not have any Ewins \n adding Ewins[0]");
             member.roles.add(E_Wins[0]);
+        }
+        else {
+            console.log("has Ewins");
         }
     }
     else {
