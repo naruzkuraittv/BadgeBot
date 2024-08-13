@@ -317,6 +317,35 @@ function handleRoles3(member) { // 100 % broken
     }
 }
 
+function doyouhaveallgymbadges(member) {
+    return Gymbadges_roles.every(role => member.roles.cache.has(role));
+}
+function managebadges(member) {
+    if (!doyouhaveallgymbadges(member)) {
+        member.roles.remove(Elite_challenger);
+        member.roles.remove(E_Wins[0]);
+        member.roles.remove(E_Wins[1]);
+        member.roles.remove(E_Wins[2]);
+        member.roles.remove(E_Wins[3]);
+       /*member.roles.remove(Elite_Victor);
+        member.roles.remove(Champion_Challenger);
+        member.roles.remove(Champions);*/
+    }   
+    if (doyouhaveallgymbadges(member)) {
+        member.roles.add(Elite_challenger);
+        if (
+            !member.roles.cache.has(E_Wins[0]) &&
+            !member.roles.cache.has(E_Wins[1]) &&
+            !member.roles.cache.has(E_Wins[2]) &&
+            !member.roles.cache.has(E_Wins[3]) &&
+            !member.roles.cache.has(Elite_Victor)
+        ) {
+            member.roles.add(E_Wins[0]);
+        }
+        
+    }
+
+}
 
 
 
@@ -328,7 +357,8 @@ client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
 
     const gainedRole = newMember.roles.cache.find(role => !oldMember.roles.cache.has(role.id));
     if (gainedRole) {
-        handleRoles(newMember);
+        //handleRoles(newMember);
+        managebadges(newMember);
     }
 
     processingMembers.delete(newMember.id);
