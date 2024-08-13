@@ -318,10 +318,12 @@ function handleRoles3(member) { // 100 % broken
 }
 
 function doyouhaveallgymbadges(member) {
+    console.log("checking if user has all the badges");
     return Gymbadges_roles.every(role => member.roles.cache.has(role));
 }
 function managebadges(member) {
     if (doyouhaveallgymbadges(member)) {
+        console.log("has all the badges");
         member.roles.add(Elite_challenger);
         if (
             !member.roles.cache.has(E_Wins[0]) &&
@@ -330,17 +332,24 @@ function managebadges(member) {
             !member.roles.cache.has(E_Wins[3]) &&
             !member.roles.cache.has(Elite_Victor)
         ) {
+            console.log("does not have any Ewins");
             member.roles.add(E_Wins[0]);
         }
         
     }
-    if (!doyouhaveallgymbadges(member)) {
+    else {
+        console.log("does not have all the badges");
         member.roles.remove(Elite_challenger);
+        console.log("removed Elite_challenger");
         member.roles.remove(E_Wins[0]);
+        console.log("removed E_Wins[0]");
         member.roles.remove(E_Wins[1]);
+        console.log("removed E_Wins[1]");
         member.roles.remove(E_Wins[2]);
+        console.log("removed E_Wins[2]");
         member.roles.remove(E_Wins[3]);
-       /*member.roles.remove(Elite_Victor);
+        console.log("removed E_Wins[3]");
+    /*member.roles.remove(Elite_Victor);
         member.roles.remove(Champion_Challenger);
         member.roles.remove(Champions);*/
     }   
