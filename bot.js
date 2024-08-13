@@ -322,6 +322,8 @@ function doyouhaveallgymbadges(member) {
     return Gymbadges_roles.every(role => member.roles.cache.has(role));
 }
 function managebadges(member) {
+    let taken = false; 
+    let re4 = false, r0 = false, r1 = false, r2 = false, r3 = false; 
     if (doyouhaveallgymbadges(member)) {
         console.log("has all the badges");
         member.roles.add(Elite_challenger);
@@ -335,7 +337,6 @@ function managebadges(member) {
             console.log("does not have any Ewins");
             member.roles.add(E_Wins[0]);
         }
-        taken = false;
     }
     else {
         console.log("does not have all the badges");
