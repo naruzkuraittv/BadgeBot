@@ -341,6 +341,7 @@ function managebadges(member) {
             console.log("does not have any Ewins and or isnt champion or elite challenger or a champuion \n adding Ewins[0] and Elite Challenger");
         }
         else {
+            console.log("has all the badges, and atleast one of the higher stuff");
             if (
                 member.roles.cache.has(Elite_challenger) &&
                 !member.roles.cache.has(E_Wins[0]) &&
@@ -351,17 +352,38 @@ function managebadges(member) {
                 !member.roles.cache.has(Champion_Challenger) &&
                 !member.roles.cache.has(Champions)
             ) {
-                console.log("does not have any Ewins");
+                console.log("does not have any Ewins but has elite challenger \n adding Ewins[0]");
                 member.roles.add(E_Wins[0]);
                 taken = false;
             }
             else {
-            console.log("has Ewins elite victor or champion challenger or champions so taking elite challenger");
+            console.log("has Ewins elite victor or champion challenger or champions");
+                if (member.roles.cache.has(Elite_challenger)) {
+                    console.log("has Elite_challenger");
+                    console.log("this part of the else .... if statement does nothing and is here for logging only");
+                    if (member.roles.cache.has(E_Wins[0])) {
+                        console.log("has E_Wins[0]");
+                    }
+                    if (member.roles.cache.has(E_Wins[1])) {
+                        console.log("has E_Wins[1]");
+                    }
+                    if (member.roles.cache.has(E_Wins[2])) {
+                        console.log("has E_Wins[2]");
+                    }
+                    if (member.roles.cache.has(E_Wins[3])) {
+                        console.log("has E_Wins[3]");
+                    }
+                    if (member.roles.cache.has(Elite_Victor)) {
+                        console.log("has Elite_Victor");
+                //if member has elite victor then remove all Ewins and elite challenger and add champion challenger
+                        console.log("has Elite_challenger");
+                        member.roles.remove(Elite_challenger);
+                        console.log("removed Elite_challenger");
+                        //add champion challenger
+                        member.roles.add(Champion_Challenger);
+                    }
+                }
 
-                console.log("has Elite_challenger");
-                member.roles.remove(Elite_challenger);
-                console.log("removed Elite_challenger");
-                re4c = true;
 
             }
             console.log("has Ewins or elite challenger or champion challenger or champion");
