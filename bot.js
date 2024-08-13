@@ -323,24 +323,66 @@ function doyouhaveallgymbadges(member) {
 }
 function managebadges(member) {
     let taken = false; 
-    let re4 = false, r0 = false, r1 = false, r2 = false, r3 = false; 
+    let re4c = false, r0 = false, r1 = false, r2 = false, r3 = false; 
     if (doyouhaveallgymbadges(member)) {
         console.log("has all the badges");
-        member.roles.add(Elite_challenger);
         if (
+            !member.roles.cache.has(Elite_challenger) &&
             !member.roles.cache.has(E_Wins[0]) &&
             !member.roles.cache.has(E_Wins[1]) &&
             !member.roles.cache.has(E_Wins[2]) &&
             !member.roles.cache.has(E_Wins[3]) &&
-            !member.roles.cache.has(Elite_Victor)
+            !member.roles.cache.has(Elite_Victor)&&
+            !member.roles.cache.has(Champion_Challenger)&&
+            !member.roles.cache.has(Champions)
         ) {
-            console.log("does not have any Ewins \n adding Ewins[0]");
+            member.roles.add(Elite_challenger);
             member.roles.add(E_Wins[0]);
+            console.log("does not have any Ewins and or isnt champion or elite challenger or a champuion \n adding Ewins[0] and Elite Challenger");
         }
         else {
-            console.log("has Ewins");
+            if (
+                member.roles.cache.has(Elite_challenger) &&
+                !member.roles.cache.has(E_Wins[0]) &&
+                !member.roles.cache.has(E_Wins[1]) &&
+                !member.roles.cache.has(E_Wins[2]) &&
+                !member.roles.cache.has(E_Wins[3]) &&
+                !member.roles.cache.has(Elite_Victor) &&
+                !member.roles.cache.has(Champion_Challenger) &&
+                !member.roles.cache.has(Champions)
+            ) {
+                console.log("does not have any Ewins");
+                member.roles.add(E_Wins[0]);
+                taken = false;
+            }
+            else {
+            console.log("has Ewins elite victor or champion challenger or champions so taking elite challenger");
+
+                console.log("has Elite_challenger");
+                member.roles.remove(Elite_challenger);
+                console.log("removed Elite_challenger");
+                re4c = true;
+
+            }
+            console.log("has Ewins or elite challenger or champion challenger or champion");
+            //if has Elite_victor then add Champion_Challenger
+            if (member.roles.cache.has(Elite_Victor)&&
+                !member.roles.cache.has(Champion_Challenger)
+                ) 
+            {
+                console.log("Elite Victor removed, champion challenger added it");
+                member.roles.remove(Elite_challenger);
+                member.roles.remove(Elite_Victor);
+                member.roles.add(Champion_Challenger);
+            }
+            if (member.roles.cache.has(Champions) &&
+                !member.roles.cache.has(Champion_Challenger) 
+                )
+                console.log("has Champion Challenger and champions taking champion challenger");
+                member.roles.remove(Champion_Challenger);                
+            }
         }
-    }
+
     else {
         console.log("does not have all the badges");
         if (member.roles.cache.has(Elite_challenger)) 
