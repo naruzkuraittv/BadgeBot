@@ -335,31 +335,78 @@ function managebadges(member) {
             console.log("does not have any Ewins");
             member.roles.add(E_Wins[0]);
         }
-        
+        taken = false;
     }
     else {
         console.log("does not have all the badges");
-        member.roles.remove(Elite_challenger);
-        console.log("removed Elite_challenger");
-        member.roles.remove(E_Wins[0]);
-        console.log("removed E_Wins[0]");
-        member.roles.remove(E_Wins[1]);
-        console.log("removed E_Wins[1]");
-        member.roles.remove(E_Wins[2]);
-        console.log("removed E_Wins[2]");
-        member.roles.remove(E_Wins[3]);
-        console.log("removed E_Wins[3]");
+        if (member.roles.cache.has(Elite_challenger)) 
+            {
+                console.log("has Elite_challenger");
+                member.roles.remove(Elite_challenger);
+                console.log("removed Elite_challenger");
+                re4 = true;
+                taken = true;
+            }
+        if (member.roles.cache.has(E_Wins[0])) 
+            {
+                console.log("has E_Wins[0]");
+                member.roles.remove(E_Wins[0]);
+                console.log("removed E_Wins[0]");
+                r0 = true;
+                taken = true;
+            }
+        if (member.roles.cache.has(E_Wins[1])) 
+            {
+                console.log("has E_Wins[1]");
+                member.roles.remove(E_Wins[1]);
+                console.log("removed E_Wins[1]");
+                r1 = true;
+                taken = true;
+            }
+        if (member.roles.cache.has(E_Wins[2])) 
+            {
+                console.log("has E_Wins[2]");
+                member.roles.remove(E_Wins[2]);
+                console.log("removed E_Wins[2]");
+                r2 = true;
+                taken = true;
+            }
+        if (member.roles.cache.has(E_Wins[3])) 
+            {
+                console.log("has E_Wins[3]");
+                member.roles.remove(E_Wins[3]);
+                console.log("removed E_Wins[3]");
+                r3 = true;
+                taken = true;
+            }
+        if (taken == true) 
+            {
+                console.log("taken is true");
+                console.log(`The user lost re4: ${re4}, r0: ${r0}, r1: ${r1}, r2: ${r2}, r3: ${r3}`);
+            }
     /*member.roles.remove(Elite_Victor);
         member.roles.remove(Champion_Challenger);
         member.roles.remove(Champions);*/
-    }   
+    };
 
 
 }
 
 
-
-
+function IsItE_WinsOrBadges(member) {
+    //determin if the role change was the user getting or loosing an ewins role skip badge check
+    if (E_Wins.some(role => member.roles.cache.has(role))) {
+        ewins = 1;
+        return ewins;
+    }
+}
+function RemoveOldeWinsAndKeepUpdatedE_Wins(member) {
+    //determin which role was added and remove the other ewins roles
+    let index = E_Wins.findIndex(role => member.roles.cache.has(role));
+    if (index === -1) return;
+    member.roles.remove(E_Wins.slice(0, index));
+    member.roles.add(E_Wins[index + 1]);
+}
 
 client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
     if (processingMembers.has(newMember.id)) return;
@@ -370,6 +417,10 @@ client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
                         oldMember.roles.cache.some(role => !newMember.roles.cache.has(role.id));
     
     if (roleChanged) {
+        // Check if the role change was an Ewins role if so skip the badge check
+        /*if (IsItE_WinsOrBadges(newMember) === ewins) {
+            RemoveOldeWinsAndKeepUpdatedE_Wins(newMember);
+        }*/ //idk how to garuntee keep the new one
         managebadges(newMember);
     }
 
